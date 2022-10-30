@@ -4,10 +4,11 @@ txrend <- Donne_es_TP1_ACT_2009_Automne_2022 <- read_excel(
 colnames(txrend) <- c("date", "ind_1", "ind_2")
 View(txrend)
 ## Attribution arbitraire des paramètres pour une matrice à 2 états :
+# le point (ex.: mu.1) peut être remplacé par l'indice boursier (1 ou 2)
 # État 1 = bonne condition
-#   ~N(mu1, sigma1) où mu1 > 0 car rendement positif
+#   ~N(mu.1, sigma.1) où mu.1 > 0 car rendement positif
 # État 2 = mauvaise condition
-#   ~N(mu2 sigma2) où nu2 < 0 car rendement négatif
+#   ~N(mu.2, sigma.2) où mu.2 < 0 car rendement négatif
 
 ## Pour partir avec une moyenne à peu près représentative, nous calculons la 
 # hausse moyenne de l'indice lorsqu'elle augmente et la baisse moyenne de 
