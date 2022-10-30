@@ -39,13 +39,25 @@ plimit <- matrix(c(2/3, 1/3))
 # L1 = vraisemblance d"être dans l'état 1 au temps x, x = temps, i = indice
 
 ind1 <- unlist(txrend[2])
-L1x1i1 <- (plimit[1] * P[1, 1]) + (plimit[2] * P[2, 1]) * dnorm((ind1[1] - mu1)/sig1)
-L2x1i1 <- (plimit[2] * P[2, 1]) + (plimit[2] * P[2, 2]) * dnorm((ind1[1] - mu2)/sig2)
+L1x1i1 <- (plimit[1] * P[1, 1]) + (plimit[2] * P[2, 1]) * 
+  dnorm((ind1[1] - mu1)/sig1)
+L2x1i1 <- (plimit[2] * P[2, 1]) + (plimit[2] * P[2, 2]) * 
+  dnorm((ind1[1] - mu2)/sig2)
 Ltotx1i1 <- L1x1i1 + L2x1i1 # L total pour l'indice 1 au temps 1
 # Ensuite, on détermine Pr(Theta(1) = 1) et P(Theta(1) = 2)
 pi1 <- L1x1i1/(Ltotx1i1)
 pi2 <- L2x1i1/(Ltotx1i1)
  
+L1x2i1 <- (pi1 * P[1, 1]) + (pi2 * P[2, 1]) * 
+  dnorm((ind1[2] - mu1)/sig1)
+L2x2i1 <- (pi2 * P[2, 1]) + (pi2 * P[2, 2]) * 
+  dnorm((ind1[2] - mu1)/sig1)
+Ltotx2i1 <- L1x2i1 + L2x2i1
+
+
+# Ensuite on recommence le calcul pour le temps 2 en remplaçant les probabilités
+# limites par pi1 et pi2 et ainsi de suite pour toute notre période d'intérêt
+
 
 # Il serait intéressant de créer une fonction pour calculer rapidement la 
 # vraisemblance.
@@ -55,9 +67,12 @@ pi2 <- L2x1i1/(Ltotx1i1)
 # y: état de base (1 ou 2)
 # t: indice de temps, correspondant à une date (entre 1 et 624)
 
-Lyxt <- function(état, temps, indice)
+vrais <- function(temps, indice)
 {
-  plimit[y, ]
+  x <- temps
+  i <- indice
+  for (n in 2 to 522)
+    
 } 
   
   
