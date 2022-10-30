@@ -14,26 +14,20 @@ View(txrend)
 # l'indice lorsqu'elle descend
 
 
-## haussemoy
-# x: fichier contenant nos informations (col 1 = tx de rendement, 
-#                                           col 2 = indice 1, col 3 = indice 3)
-# y: indice (1 ou 2)
-# exemple :
-# haussemoy(txrend, 1) # calcule l la moyenne de la hausse de l'indice 1 
-#     lorsqu'elle augmente d'un mois è l 'autre
-
-haussemoy <- function(x, y) mean(x[y+1] >= 0)
+ind1 <- unlist(txrend[2])
+ind1pos <- ind1[ind1 >= 0]
+ind1neg <- ind1[ind1 < 0]
+ind2 <- unlist(txrend[3])
+ind2pos <- ind2[ind2 >= 0]
+ind2neg <- ind2[ind2 < 0]
 
 # à ce point nous pouvons poser comme moyenne de départ, lorsqu'on est dans 
 # l'état 1 (bonne condition):
-mu11 <- haussemoy(txrend, 1) # mu indice 1, état 1
-mu21 <- haussemoy(txrend, 2) # mu indice 2, état 1
-
-## Similairement pour un point de départ dans l'état 2 (mauvaise condition)
-# nous pouvons créer une fonction calcule la moyenne de baisse
-# du tx de rendement lorsque celui-ci baisse :
-baissemoy <- function(x, y) mean(x[y+1] < 0)
-
-# et y assigné les variables :
-mu12 <- baissemoy(txrend, 1) # mu indice 1, état 2
-mu22 <- baissemoy(txrend, 2) # mu indice 2, état 2
+mu11 <- mean(ind1pos) # mu indice 1, état 1
+sigma11 <- var(ind1pos) 
+mu21 <- mean(ind2pos) # mu indice 2, état 1
+sigma21 <- var(ind2pos)
+mu12 <- mean(ind1neg) # mu indice 1, état 2
+sigma12 <- var(ind1neg)
+mu22 <- mean(ind2neg) # mu indice 2, état 2
+sigma22 <- var(ind2neg)
