@@ -41,3 +41,9 @@ sigma22 <- var(ind2neg)
 alpha1 <- sum(ind1 > 0)/length(ind1) # probabilité de débuter dans l'état 1
 alpha2 <- sum(ind1 < 0)/length(ind1) # probabilité de débuter dans l'état 1
 
+## Pour débuter avec la fonction vraissemblance, on utilise le conditionnement 
+# sur chaque état :
+# Pr(R(0) = r(0) | Theta(0) = 1) P(Theta(0) = 1) + 
+#     Pr(R(0) = r(0) | Theta(0) = 2) P(Theta(0) = 2) =
+# Pr(R(0) = r(0) | Theta(0) = 1) alpha1 + 
+#     Pr(R(0) = r(0) | Theta(0) = 2) alpha2 
