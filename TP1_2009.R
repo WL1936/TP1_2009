@@ -13,22 +13,54 @@ sig2 <- 0.08
 
 # Matrice de transition :
 P <- matrix(c(0.95, 0.1, 0.05, 0.9), 2)
-P2 <- P%*%P
-P4 <- P2%*%P2
-
 
 ## Nous désirons maintenant définir les probabilités initiales d'être dans un 
-# état ou l'autre. Pour ce faire, nous prenons la proportion du temps où on a
-# enregistré une hausse du rendement, ce qui nous fournira une information 
-# plausible pour débuter :
-ind1 <- unlist(txrend[2])
-ind2 <- unlist(txrend[3])
-alpha1 <- sum(ind1 > 0)/length(ind1) # probabilité de débuter dans l'état 1, 
-alpha2 <- sum(ind1 < 0)/length(ind1) # probabilité de débuter dans l'état 1
+# état ou l'autre. Pour ce faire, nous prenons la probabilité limite à partir 
+# de la matrice de transition
+P2 <- P%*%P
+P3 <- P%*%P2
+P4 <- P2%*%P2
+P8 <- P4%*%P4
+P16 <- P8%*%P8
+P32 <- P16%*%P16
+P64 <- P32%*%P32
+plimit <- matrix(c(2/3, 1/3))
 
-## Pour débuter avec la fonction vraissemblance, on utilise le conditionnement 
+## Pour débuter avec la fonction vraisemblance, on utilise le conditionnement 
 # sur chaque état :
 # Pr(R(1) = r(1) | Theta(0) = 1) P(Theta(0) = 1) + 
 #     Pr(R(1) = r(1) | Theta(0) = 2) P(Theta(0) = 2) =
 # Pr(R(1) = r(1) | Theta(0) = 1) alpha1 + 
 #     Pr(R(1) = r(1) | Theta(0) = 2) alpha2 
+
+# Noter que la dernière entrée de l'année 2015 correspond à la ligne 552
+
+# Voici la première itération 
+# L1 = vraisemblance d"être dans l'état 1 au temps x, x = temps, i = indice
+
+ind1 <- unlist(txrend[2])
+L1x1i1 <- (plimit[1] * P[1, 1]) + (plimit[2] * P[2, 1]) * dnorm((ind1[1] - mu1)/sig1)
+L2x1i1 <- (plimit[2] * P[2, 1]) + (plimit[2] * P[2, 2]) * dnorm((ind1[1] - mu2)/sig2)
+Ltotx1i1 <- L1x1i1 + L2x1i1 # L total pour l'indice 1 au temps 1
+# Ensuite, on détermine Pr(Theta(1) = 1) et P(Theta(1) = 2)
+pi1 <- L1x1i1/(Ltotx1i1)
+pi2 <- L2x1i1/(Ltotx1i1)
+ 
+
+# Il serait intéressant de créer une fonction pour calculer rapidement la 
+# vraisemblance.
+
+
+# x: données utilisé (indice 1 ou 2)
+# y: état de base (1 ou 2)
+# t: indice de temps, correspondant à une date (entre 1 et 624)
+
+Lyxt <- function(état, temps, indice)
+{
+  plimit[y, ]
+} 
+  
+  
+  
+  
+  
