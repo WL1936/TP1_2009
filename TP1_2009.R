@@ -3,47 +3,32 @@ txrend <- Donne_es_TP1_ACT_2009_Automne_2022 <- read_excel(
   "Documents/TP1_2009/Données TP1 ACT-2009 Automne 2022.xlsx")
 colnames(txrend) <- c("date", "ind_1", "ind_2")
 View(txrend)
-## Attribution arbitraire des paramètres pour une matrice à 2 états :
-# le point (ex.: mu.1) peut être remplacé par l'indice boursier (1 ou 2)
-# État 1 = bonne condition
-#   ~N(mu.1, sigma.1) où mu.1 > 0 car rendement positif
-# État 2 = mauvaise condition
-#   ~N(mu.2, sigma.2) où mu.2 < 0 car rendement négatif
 
-## Pour partir avec une moyenne à peu près représentative, nous calculons la 
-# hausse moyenne de l'indice lorsqu'elle augmente et la baisse moyenne de 
-# l'indice lorsqu'elle descend
+# valeur arbitraire
 
+mu1 <- 0.01
+mu2 <- -0.02
+sig1 <- 0.04
+sig2 <- 0.08
 
-ind1 <- unlist(txrend[2])
-ind1pos <- ind1[ind1 >= 0]
-ind1neg <- ind1[ind1 < 0]
-ind2 <- unlist(txrend[3])
-ind2pos <- ind2[ind2 >= 0]
-ind2neg <- ind2[ind2 < 0]
+# Matrice de transition :
+P <- matrix(c(0.95, 0.1, 0.05, 0.9), 2)
+P2 <- P%*%P
+P4 <- P2%*%P2
 
-# à ce point nous pouvons poser comme moyenne de départ, lorsqu'on est dans 
-# l'état 1 (bonne condition):
-mu11 <- mean(ind1pos) # mu indice 1, état 1
-sigma11 <- var(ind1pos) 
-mu21 <- mean(ind2pos) # mu indice 2, état 1
-sigma21 <- var(ind2pos)
-mu12 <- mean(ind1neg) # mu indice 1, état 2
-sigma12 <- var(ind1neg)
-mu22 <- mean(ind2neg) # mu indice 2, état 2
-sigma22 <- var(ind2neg)
 
 ## Nous désirons maintenant définir les probabilités initiales d'être dans un 
 # état ou l'autre. Pour ce faire, nous prenons la proportion du temps où on a
-# enregistré une hausse du rendement, ce qui nous fournira une informations 
+# enregistré une hausse du rendement, ce qui nous fournira une information 
 # plausible pour débuter :
-
-alpha1 <- sum(ind1 > 0)/length(ind1) # probabilité de débuter dans l'état 1
+ind1 <- unlist(txrend[2])
+ind2 <- unlist(txrend[3])
+alpha1 <- sum(ind1 > 0)/length(ind1) # probabilité de débuter dans l'état 1, 
 alpha2 <- sum(ind1 < 0)/length(ind1) # probabilité de débuter dans l'état 1
 
 ## Pour débuter avec la fonction vraissemblance, on utilise le conditionnement 
 # sur chaque état :
-# Pr(R(0) = r(0) | Theta(0) = 1) P(Theta(0) = 1) + 
-#     Pr(R(0) = r(0) | Theta(0) = 2) P(Theta(0) = 2) =
-# Pr(R(0) = r(0) | Theta(0) = 1) alpha1 + 
-#     Pr(R(0) = r(0) | Theta(0) = 2) alpha2 
+# Pr(R(1) = r(1) | Theta(0) = 1) P(Theta(0) = 1) + 
+#     Pr(R(1) = r(1) | Theta(0) = 2) P(Theta(0) = 2) =
+# Pr(R(1) = r(1) | Theta(0) = 1) alpha1 + 
+#     Pr(R(1) = r(1) | Theta(0) = 2) alpha2 
