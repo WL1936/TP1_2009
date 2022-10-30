@@ -32,3 +32,12 @@ mu12 <- mean(ind1neg) # mu indice 1, état 2
 sigma12 <- var(ind1neg)
 mu22 <- mean(ind2neg) # mu indice 2, état 2
 sigma22 <- var(ind2neg)
+
+## Nous désirons maintenant définir les probabilités initiales d'être dans un 
+# état ou l'autre. Pour ce faire, nous prenons la proportion du temps où on a
+# enregistré une hausse du rendement, ce qui nous fournira une informations 
+# plausible pour débuter :
+
+alpha1 <- sum(ind1 > 0)/length(ind1) # probabilité de débuter dans l'état 1
+alpha2 <- sum(ind1 < 0)/length(ind1) # probabilité de débuter dans l'état 1
+
