@@ -1,6 +1,6 @@
 library(readxl)
 txrend <- Donne_es_TP1_ACT_2009_Automne_2022 <- read_excel(
-  "Documents/TP1_2009/Données TP1 ACT-2009 Automne 2022.xlsx")
+  "/Users/mcsommeliers/Documents/TP1_2009/Données TP1 ACT-2009 Automne 2022.xlsx")
 colnames(txrend) <- c("date", "ind_1", "ind_2")
 View(txrend)
 
@@ -38,44 +38,55 @@ plimit <- matrix(c(2/3, 1/3))
 # Voici la première itération 
 # L1 = vraisemblance d"être dans l'état 1 au temps x, x = temps, i = indice
 
+
+
+# Ensuite on recommence le calcul pour le temps 2 en remplaçant les probabilités
+# limites par pi1 et pi2 et ainsi de suite pour toute notre période d'intérêt
+
+# Il serait intéressant de créer une fonction pour calculer rapidement la 
+# vraisemblance.
+
+# x: données utilisé (indice 1 ou 2)
+# y: état de base (1 ou 2)
+# t: indice de temps, correspondant à une date (entre 1 et 624)
+
 ind1 <- unlist(txrend[2])
+ind1_2015 <- ind1[-(553:624)]
+Ltotx1i1 <- vector()
 L1x1i1 <- (plimit[1] * P[1, 1]) + (plimit[2] * P[2, 1]) * 
-  dnorm((ind1[1] - mu1)/sig1)
+  dnorm((ind1_2015[1] - mu1)/sig1)
 L2x1i1 <- (plimit[2] * P[2, 1]) + (plimit[2] * P[2, 2]) * 
-  dnorm((ind1[1] - mu2)/sig2)
-Ltotx1i1 <- L1x1i1 + L2x1i1 # L total pour l'indice 1 au temps 1
+  dnorm((ind1_2015[1] - mu2)/sig2)
+Ltotx1i1[1] <- L1x1i1 + L2x1i1 # L total pour l'indice 1 au temps 1
 # Ensuite, on détermine Pr(Theta(1) = 1) et P(Theta(1) = 2)
-pi1 <- L1x1i1/(Ltotx1i1)
-pi2 <- L2x1i1/(Ltotx1i1)
- 
+pi1 <- L1x1i1/(Ltotx1i1[1])
+pi2 <- L2x1i1/(Ltotx1i1[1])
+
 L1x2i1 <- (pi1 * P[1, 1]) + (pi2 * P[2, 1]) * 
   dnorm((ind1[2] - mu1)/sig1)
 L2x2i1 <- (pi2 * P[2, 1]) + (pi2 * P[2, 2]) * 
   dnorm((ind1[2] - mu1)/sig1)
 Ltotx2i1 <- L1x2i1 + L2x2i1
 
-
-# Ensuite on recommence le calcul pour le temps 2 en remplaçant les probabilités
-# limites par pi1 et pi2 et ainsi de suite pour toute notre période d'intérêt
-
-
-# Il serait intéressant de créer une fonction pour calculer rapidement la 
-# vraisemblance.
-
-
-# x: données utilisé (indice 1 ou 2)
-# y: état de base (1 ou 2)
-# t: indice de temps, correspondant à une date (entre 1 et 624)
-
-vrais <- function(temps, indice)
+vrais <- function(indice)
 {
-  x <- temps
-  i <- indice
-  for (n in 2 to 522)
-    
-} 
-  
-  
-  
-  
+  x <- indice
+  Ltot <- numeric(length(x))
+  L1t <- (plimit[1] * P[1, 1]) + (plimit[2] * P[2, 1]) * 
+    dnorm((x[1] - mu1)/sig1)
+  L2t <- (plimit[2] * P[2, 1]) + (plimit[2] * P[2, 2]) * 
+    dnorm((x[1] - mu2)/sig2)
+  Ltot[1] <- L1t + L2t
+  pi1 <- L1t/Ltot[1]
+  pi2 <- L2t/Ltot[1]
+  x1 <- x[-1]
+  L1t <- (pi1 * P[1, 1]) + (pi2 * P[2, 1]) * 
+    dnorm((x - mu1)/sig1)
+  L2t <- (pi2 * P[2, 1]) + (pi2 * P[2, 2]) * 
+    dnorm((x - mu1)/sig1)
+  Ltot <- L1t + L2t
+  pi1 <- L1t/Ltot[1]
+  pi2 <- L2t/Ltot[1]
+  print(Ltot)
+}
   
